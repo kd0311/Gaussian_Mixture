@@ -1,0 +1,24 @@
+function [ A ] = VAR_MA_implied_higher_order(setup, j, B_matrix)
+%calculates the MA coefficient of order j implied by a higher order VAR
+%(coefficients for which are part of setup)
+
+temp=[setup.VARsymA;kron(eye(setup.VARsym_order-1),eye(setup.size_obs)) zeros(setup.size_obs*(setup.VARsym_order-1),setup.size_obs)];
+%companion form of VAR
+%eig(temp)
+A=temp^(j);
+A=A(1:setup.size_obs,1:setup.size_obs);
+%A(:,:) = A * B_matrix; 
+
+% Initialize unit vector for the j-th shock
+e_j = zeros(setup.size_obs, 1);
+    
+A = A * B_matrix * e_j;  % Multiply A with B_matrix and the unit vector e_j
+end
+%A_un=A_un(1:setup.size_obs,1:setup.size_obs)
+
+% B_gdp(1) -> info shock to GDP, B_gdp(2) -> mp shock to GDP
+% B_inflation(1) -> info shock to Inflation, B_inflation(2) -> mp shock to Inflation
+% A(:, 1) = A_un * [B_gdp(1); B_inflation(1)]; % Info shock response
+% A(:, 2) = A_un * [B_gdp(2); B_inflation(2)]; % MP shock response
+
+%end
